@@ -1,0 +1,52 @@
+{
+    "ServiceDelivery": {
+        "ResponseTimestamp": "2022-10-16T18:48:24Z",
+        "ProducerRef": "SF",
+        "Status": true,
+        "StopMonitoringDelivery": {
+            "version": "1.4",
+            "ResponseTimestamp": "2022-10-16T18:48:24Z",
+            "Status": true,
+            "MonitoredStopVisit": [
+                {
+                    "RecordedAtTime": "2022-10-16T18:48:19Z",
+                    "MonitoringRef": "15539",
+                    "MonitoredVehicleJourney": {
+                        "LineRef": "14",
+                        "DirectionRef": "OB",
+                        "FramedVehicleJourneyRef": {
+                            "DataFrameRef": "2022-10-16",
+                            "DatedVehicleJourneyRef": "11122457"
+                        },
+                        "PublishedLineName": "MISSION",
+                        "OperatorRef": "SF",
+                        "OriginRef": "16498",
+                        "OriginName": "Steuart St & Mission St",
+                        "DestinationRef": "17099",
+                        "DestinationName": "Daly City",
+                        "Monitored": true,
+                        "InCongestion": null,
+                        "VehicleLocation": {
+                            "Longitude": "-122.402016",
+                            "Latitude": "37.7864227"
+                        },
+                        "Bearing": null,
+                        "Occupancy": null,
+                        "VehicleRef": "7288",
+                        "MonitoredCall": {
+                            "StopPointRef": "15539",
+                            "StopPointName": "Mission St & 7th St",
+                            "VehicleLocationAtStop": "",
+                            "VehicleAtStop": "",
+                            "AimedArrivalTime": "2022-10-16T18:52:05Z",
+                            "ExpectedArrivalTime": "2022-10-16T18:52:27Z",
+                            "AimedDepartureTime": "2022-10-16T18:52:05Z",
+                            "ExpectedDepartureTime": null,
+                            "Distances": ""
+                        }
+                    }
+                }
+            ]
+        }
+    }
+}
