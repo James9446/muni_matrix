@@ -3,7 +3,7 @@ import pprint
 import json
 import os
 from time_functions import get_time_difference
-from led_matrix import outputs
+from led_matrix import output
 import time
 
 tokens = [
@@ -43,9 +43,9 @@ while True:
     stop_ids = ["15539", "15540"]
     # stop_ids = ["15540"]
 
-    for id in stop_ids:
-        response = get_bus_data(id)
-        print("Stop ID: ", id)
+    for stop_id in stop_ids:
+        response = get_bus_data(stop_id)
+        print("Stop ID: ", stop_id)
         if "The allowed number of requests" in response.text:
             print("RESPONSE TEXT: ", response.text)
             print('token switch')
@@ -116,9 +116,13 @@ while True:
 
             ### check that there is a bus schedule returned
             if not nested_data: 
-                print("No Bus Schedule Found")
-                output(4, -90, 0, False, "No Bus Schedule Found")
-                time.sleep(1)
+                # print("No Bus Schedule Found")
+                if stop_id == "15539":
+                    no_bus_txt = "No update on next 14 at 7th St"
+                else:
+                    no_bus_txt = "No update on next 14R at 8th St"
+                output(4, -90, 0, False, no_bus_txt)
+                time.sleep(0.5)
                 # time.sleep(60)
 
 
@@ -130,12 +134,13 @@ while True:
                 arrivals = []
 
                 for item in nested_data:
-                    if id == "15540" and item["MonitoredVehicleJourney"]["LineRef"] != "14":
+                    if stop_id == "15540" and item["MonitoredVehicleJourney"]["LineRef"] != "14":
+                        print("condition check: ", item["MonitoredVehicleJourney"]["LineRef"])
                         arrivals.append(item["MonitoredVehicleJourney"]["MonitoredCall"]["ExpectedArrivalTime"])
                         bus_number = item["MonitoredVehicleJourney"]["LineRef"]
                         direction = item["MonitoredVehicleJourney"]["DirectionRef"]
                         bus_stop = item["MonitoredVehicleJourney"]["MonitoredCall"]["StopPointName"]
-                    elif id == "15539":
+                    elif stop_id == "15539":
                         arrivals.append(item["MonitoredVehicleJourney"]["MonitoredCall"]["ExpectedArrivalTime"])
                         bus_number = item["MonitoredVehicleJourney"]["LineRef"]
                         direction = item["MonitoredVehicleJourney"]["DirectionRef"]
@@ -169,13 +174,12 @@ while True:
                     formatted_arrival_times += f"{str(arrival_times[i])} minute{add_s}{add_and}"
 
 
-                led_txt = f"{bus_number} in {formatted_arrival_times} at {bus_stop}"
+                led_txt = f"Next {bus_number} in {formatted_arrival_times} at {bus_stop[13:]}"
 
                 # print(f"{bus_number} in {formatted_arrival_times} at {bus_stop}")
-                
-                output(4, -90, 0, False, led_txt)
-            time.sleep(5)
-            # time.sleep(0.5)
+                if len(arrival_times) > 0:
+                    output(4, -90, 0, False, led_txt)
+            time.sleep(0.5)
 
 
     ###  -------- SECTION END - TRANSFORMING DATA --------
