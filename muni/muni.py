@@ -179,6 +179,8 @@ while True:
                 # print(f"{bus_number} in {formatted_arrival_times} at {bus_stop}")
                 if len(arrival_times) > 0:
                     output(4, -90, 0, False, led_txt)
+                elif len(arrival_times) == 0 and stop_id == "15540":
+                    output(4, -90, 0, False, "No update on next 14R at 8th St")
             time.sleep(0.5)
 
 
