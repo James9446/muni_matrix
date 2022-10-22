@@ -34,12 +34,12 @@ def get_time_difference(arrival_time):
     arrival_minute = converted_arrival_date.minute
     
     if arrival_minute < now_minute:
-        print('minute rollover')
-        print("pre arrival_minute: ", arrival_minute)
-        print("pre now_minute: ", now_minute)
+        # print('minute rollover')
+        # print("pre arrival_minute: ", arrival_minute)
+        # print("pre now_minute: ", now_minute)
         arrival_minute += 60
-        print("post arrival_minute: ", arrival_minute)
-        print("post now_minute: ", now_minute)
+        # print("post arrival_minute: ", arrival_minute)
+        # print("post now_minute: ", now_minute)
 
   
     next_bus = arrival_minute - now_minute
