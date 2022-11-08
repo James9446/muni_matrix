@@ -31,7 +31,7 @@ def single_stream(stop_id):
 
 green_button.when_released = lambda: display_muni_data("15539")
 blue_button.when_released = lambda: display_muni_data("15540")
-yellow_button.when_pressed = lambda: stream(20)
-red_button.when_pressed = lambda: simple_message("Te Amo Patricia")
+yellow_button.when_pressed = lambda: display_muni_data("17129")
+red_button.when_pressed = lambda: display_muni_data("15537")
 
 pause()

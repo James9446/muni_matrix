@@ -7,8 +7,12 @@ from led_matrix import output
 import time
 from utility_functions import increment_index_in_array
 
-### Stop ID Refernce: 7th St = "15539" 
-###                   8th St = "15540"
+### Stop ID Refernce: Outbound 7th St = "15539" 
+###                   Outbound 8th St = "15540"
+###                   Inbound  7th St = "17129"
+###                   Inbound  6th St = "15537"
+
+
 
 tokens = [
     "b6c22a4f-6f67-4313-b2db-65b391da6d0b",
@@ -96,28 +100,26 @@ def display_muni_data(stop_id):
 
         ### check that there is a bus schedule returned
         if not nested_data: 
-            # print("No Bus Schedule Found")
-            if stop_id == "15539":
-                no_bus_txt = "No update on next 14 at 7th St"
-            else:
-                no_bus_txt = "No update on next 14R at 8th St"
+            no_bus_txt = "No data at all :("
             output(4, -90, 2, False, no_bus_txt)
         else:
             arrivals = []
 
+            bus_number = nested_data[0]["MonitoredVehicleJourney"]["LineRef"]
+            direction = nested_data[0]["MonitoredVehicleJourney"]["DirectionRef"]
+            bus_stop = nested_data[0]["MonitoredVehicleJourney"]["MonitoredCall"]["StopPointName"]
+
             for item in nested_data:
-                if stop_id == "15540" and item["MonitoredVehicleJourney"]["LineRef"] != "14":
+                if (stop_id == "15540" or  stop_id =="15537") and item["MonitoredVehicleJourney"]["LineRef"] != "14":
                     print("condition check: ", item["MonitoredVehicleJourney"]["LineRef"])
                     arrivals.append(item["MonitoredVehicleJourney"]["MonitoredCall"]["ExpectedArrivalTime"])
                     bus_number = item["MonitoredVehicleJourney"]["LineRef"]
                     direction = item["MonitoredVehicleJourney"]["DirectionRef"]
                     bus_stop = item["MonitoredVehicleJourney"]["MonitoredCall"]["StopPointName"]
-                elif stop_id == "15539":
+                elif stop_id == "15539" or stop_id == "17129":
                     arrivals.append(item["MonitoredVehicleJourney"]["MonitoredCall"]["ExpectedArrivalTime"])
-                    bus_number = item["MonitoredVehicleJourney"]["LineRef"]
-                    direction = item["MonitoredVehicleJourney"]["DirectionRef"]
-                    bus_stop = item["MonitoredVehicleJourney"]["MonitoredCall"]["StopPointName"]
 
+            
             arrival_times = []
             for i in arrivals:
                 arrival_times.append(get_time_difference(i))
@@ -137,12 +139,31 @@ def display_muni_data(stop_id):
                     add_s = "s" 
                 formatted_arrival_times += f"{str(arrival_times[i])} minute{add_s}{add_and}"
 
-            if len(arrival_times) > 0:
-                led_txt = f"Next {bus_number} in {formatted_arrival_times} at {bus_stop[13:]}"
-                output(4, -90, 2, False, led_txt)
-            elif len(arrival_times) == 0 and stop_id == "15540":
-                print("Second condition check for 8th St")
-                output(4, -90, 2, False, "No update on next 14R at 8th St")
+            if direction == "OB":
+                inbound_or_outbound = "Outbound"
+                arrows = "<<<"
+            else:
+                inbound_or_outbound = "Inbound"
+                arrows = ">>>"
+
+            if len(arrivals) > 0:
+                led_text = f"Next {arrows} {bus_number} {arrows} in {formatted_arrival_times} at {bus_stop[13:]} {arrows}"
+            else:
+                if stop_id == "15540" or stop_id == "15537":
+                    bus_error = "14R"
+                else:
+                    bus_error = "14"
+                led_text = f"No data on {bus_error} {arrows}"
+
+            output(4, -90, 2, False, led_text)
+            
+
+            # if len(arrival_times) > 0:
+            #     led_text = f"Next {inbound_or_outbound} {arrows} {bus_number} {arrows} in {formatted_arrival_times} at {bus_stop[13:]}"
+            #     output(4, -90, 2, False, led_text)
+            # elif len(arrival_times) == 0 and stop_id == "15540":
+            #     print("Second condition check for 8th St")
+            #     output(4, -90, 2, False, "No update on next 14R at 8th St")
 
             ###  -------- SECTION END - TRANSFORMING DATA --------
             #########################################################
